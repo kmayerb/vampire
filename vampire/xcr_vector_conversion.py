@@ -13,6 +13,7 @@ import pkg_resources
 
 import numpy as np
 import pandas as pd
+from functools import partial
 
 import vampire.germline_cdr3_aa_tensor as cdr3_tensor
 
@@ -26,6 +27,7 @@ AA_DICT = {c: i for i, c in enumerate(AA_LIST)}
 AA_DICT_REV = {i: c for i, c in enumerate(AA_LIST)}
 AA_SET = set(AA_LIST)
 AA_NONGAP = [float(c != '-') for c in AA_LIST]
+CHAIN = "beta"
 
 
 def seq_to_onehot(seq):
@@ -34,12 +36,11 @@ def seq_to_onehot(seq):
         v[i][AA_DICT[a]] = 1
     return v
 
-
 def onehot_to_seq(onehot):
     return ''.join([AA_DICT_REV[v.argmax()] for v in onehot])
 
 
-# ### TCRB ###
+# ### BETA: TCRB ###
 
 # V genes:
 TCRB_V_GENE_LIST = [
@@ -50,45 +51,139 @@ TCRB_V_GENE_LIST = [
     'TCRBV09-01', 'TCRBV10-01', 'TCRBV10-02', 'TCRBV10-03', 'TCRBV11-01', 'TCRBV11-02', 'TCRBV11-03', 'TCRBV12-01',
     'TCRBV12-02', 'TCRBV12-05', 'TCRBV13-01', 'TCRBV14-01', 'TCRBV15-01', 'TCRBV16-01', 'TCRBV18-01', 'TCRBV19-01',
     'TCRBV20-01', 'TCRBV21-01', 'TCRBV22-01', 'TCRBV23-01', 'TCRBV23-or09_02', 'TCRBV25-01', 'TCRBV27-01', 'TCRBV28-01',
-    'TCRBV29-01', 'TCRBV30-01', 'TCRBVA-or09_02'
-]
+    'TCRBV29-01', 'TCRBV30-01', 'TCRBVA-or09_02']
 TCRB_V_GENE_DICT = {c: i for i, c in enumerate(TCRB_V_GENE_LIST)}
 TCRB_V_GENE_DICT_REV = {i: c for i, c in enumerate(TCRB_V_GENE_LIST)}
 TCRB_V_GENE_SET = set(TCRB_V_GENE_LIST)
 
+# ### DELTA: TCRDV ###
+    # TRDV1*01
+    # TRDV2*01
+    # TRDV2*02
+    # TRDV2*03
+    # TRDV3*01
+    # TRDV3*02
+TCRD_V_GENE_LIST = ['TCRDV01-01','TCRDV02-01','TCRDV03-01']
+TCRD_V_GENE_DICT = {c: i for i, c in enumerate(TCRD_V_GENE_LIST)}
+TCRD_V_GENE_DICT_REV = {i: c for i, c in enumerate(TCRD_V_GENE_LIST)}
+TCRD_V_GENE_SET = set(TCRD_V_GENE_LIST)
 
-def vgene_to_onehot(v_gene):
-    v = np.zeros(len(TCRB_V_GENE_SET))
-    v[TCRB_V_GENE_DICT[v_gene]] = 1
-    return v
-
-
-def onehot_to_vgene(onehot):
-    return TCRB_V_GENE_DICT_REV[onehot.argmax()]
+#### GAMMA: TCRGV ####
+    # TRGV1*01
+    # TRGV10*01
+    # TRGV10*02
+    # TRGV11*01
+    # TRGV11*02
+    # TRGV2*01
+    # TRGV2*02
+    # TRGV2*03
+    # TRGV3*01
+    # TRGV3*02
+    # TRGV4*01
+    # TRGV4*02
+    # TRGV5*01
+    # TRGV5P*01
+    # TRGV5P*02
+    # TRGV8*01
+    # TRGV9*01
+    # TRGV9*02
+    # TRGVA*01
+TCRG_V_GENE_LIST = ["TCRGV01-01","TCRGV10-01","TCRGV10-02","TCRGV11-01",
+                    "TCRGV11-02","TCRGV02-01","TCRGV02-02","TCRGV02-03",
+                    "TCRGV03-01","TCRGV03-02","TCRGV04-01","TCRGV04-02",
+                    "TCRGV05-01","TCRGV05P-01","TCRGV05P-02","TCRGV08-01",
+                    "TCRGV09-01","TCRGV09-02","TCRGVA-01"]
+TCRG_V_GENE_LIST = ['TCRDV01-01','TCRDV02-01','TCRDV03-01']
+TCRG_V_GENE_DICT = {c: i for i, c in enumerate(TCRG_V_GENE_LIST)}
+TCRG_V_GENE_DICT_REV = {i: c for i, c in enumerate(TCRG_V_GENE_LIST)}
+TCRG_V_GENE_SET = set(TCRG_V_GENE_LIST)
 
 
 # J genes:
+# BETA - J genes
+
 TCRB_J_GENE_LIST = [
     'TCRBJ01-01', 'TCRBJ01-02', 'TCRBJ01-03', 'TCRBJ01-04', 'TCRBJ01-05', 'TCRBJ01-06', 'TCRBJ02-01', 'TCRBJ02-02',
-    'TCRBJ02-03', 'TCRBJ02-04', 'TCRBJ02-05', 'TCRBJ02-06', 'TCRBJ02-07'
-]
+    'TCRBJ02-03', 'TCRBJ02-04', 'TCRBJ02-05', 'TCRBJ02-06', 'TCRBJ02-07']
+
 TCRB_J_GENE_DICT = {c: i for i, c in enumerate(TCRB_J_GENE_LIST)}
 TCRB_J_GENE_DICT_REV = {i: c for i, c in enumerate(TCRB_J_GENE_LIST)}
 TCRB_J_GENE_SET = set(TCRB_J_GENE_LIST)
+
+# DELTA - J gene
+TCRD_J_GENE_LIST = ['TRDJ01-01', 'TRDJ02-01','TRDJ03-01','TRDJ04-01']
+
+TCRD_J_GENE_DICT = {c: i for i, c in enumerate(TCRD_J_GENE_LIST)}
+TCRD_J_GENE_DICT_REV = {i: c for i, c in enumerate(TCRD_J_GENE_LIST)}
+TCRD_J_GENE_SET = set(TCRD_J_GENE_LIST)
+
+
+# GAMMA - J gene
+TCRG_J_GENE_LIST = ["TRGJ01-01","TRGJ01-02","TRGJ02-01","TRGJP-01","TRGJP1-01","TRGJP2-01"]
+
+TCRG_J_GENE_DICT = {c: i for i, c in enumerate(TCRG_J_GENE_LIST)}
+TCRG_J_GENE_DICT_REV = {i: c for i, c in enumerate(TCRG_J_GENE_LIST)}
+TCRG_J_GENE_SET = set(TCRG_J_GENE_LIST)
+
 
 for gene in TCRB_V_GENE_LIST + TCRB_J_GENE_LIST:
     # We need to specify how long strings are for numpy initialization. See onehot_to_padded_tcrbs.
     assert len(gene) < 20
 
 
-def jgene_to_onehot(j_gene):
-    v = np.zeros(len(TCRB_J_GENE_SET))
-    v[TCRB_J_GENE_DICT[j_gene]] = 1
+def vgene_to_onehot_general(v_gene, 
+                    gene_set = TCRB_V_GENE_SET, 
+                    chain_v_gene_dict=TCRB_V_GENE_DICT):
+    v = np.zeros(len(gene_set))
+    v[chain_v_gene_dict[v_gene]] = 1
     return v
 
+def onehot_to_vgene_general(onehot, 
+                    chain_v_gene_dict_rev=TCRB_V_GENE_DICT_REV):
+    return chain_v_gene_dict_rev[onehot.argmax()]
 
-def onehot_to_jgene(onehot):
-    return TCRB_J_GENE_DICT_REV[onehot.argmax()]
+def jgene_to_onehot_general(j_gene, 
+                    gene_set = TCRB_J_GENE_SET, 
+                    chain_j_gene_dict=TCRB_J_GENE_DICT):
+    v = np.zeros(len(gene_set))
+    v[chain_j_gene_dict[j_gene]] = 1
+    return v
+
+def onehot_to_jgene_general(onehot,
+                    chain_j_gene_dict_rev=TCRB_J_GENE_DICT_REV):
+    return chain_j_gene_dict_rev[onehot.argmax()]
+
+if CHAIN == "beta":
+    vgene_to_onehot = partial(vgene_to_onehot_general, gene_set = TCRB_V_GENE_SET, chain_v_gene_dict=TCRB_V_GENE_DICT)
+    onehot_to_vgene = partial(onehot_to_vgene_general, chain_v_gene_dict_rev=TCRB_V_GENE_DICT_REV)
+    jgene_to_onehot = partial(jgene_to_onehot_general, gene_set = TCRB_J_GENE_SET, chain_j_gene_dict=TCRB_J_GENE_DICT)
+    onehot_to_jgene = partial(onehot_to_jgene_general, chain_j_gene_dict_rev=TCRB_J_GENE_DICT_REV)
+if CHAIN == "delta":
+    vgene_to_onehot = partial(vgene_to_onehot_general, gene_set = TCRD_V_GENE_SET, chain_v_gene_dict=TCRD_V_GENE_DICT)
+    onehot_to_vgene = partial(onehot_to_vgene_general, chain_v_gene_dict_rev=TCRD_V_GENE_DICT_REV)
+    jgene_to_onehot = partial(jgene_to_onehot_general, gene_set = TCRD_J_GENE_SET, chain_j_gene_dict=TCRD_J_GENE_DICT)
+    onehot_to_jgene = partial(onehot_to_jgene_general, chain_j_gene_dict_rev=TCRD_J_GENE_DICT_REV)
+if CHAIN == "gamma":
+    vgene_to_onehot = partial(vgene_to_onehot_general, gene_set = TCRG_V_GENE_SET, chain_v_gene_dict=TCRG_V_GENE_DICT)
+    onehot_to_vgene = partial(onehot_to_vgene_general, chain_v_gene_dict_rev=TCRG_V_GENE_DICT_REV)
+    jgene_to_onehot = partial(jgene_to_onehot_general, gene_set = TCRG_J_GENE_SET, chain_j_gene_dict=TCRG_J_GENE_DICT)
+    onehot_to_jgene = partial(onehot_to_jgene_general, chain_j_gene_dict_rev=TCRG_J_GENE_DICT_REV)
+
+# The goal here is to retain original behavior of the 4 function, but allow change based on CHAIN arg, using functools
+# Therefore if chain is "beta" exisitng tests should pass
+#21:24 $ pytest vampire/tests/test_xcr_vector_conversion.py
+#================================================================================================================== test session starts ==================================================================================================================
+# vampire/tests/test_xcr_vector_conversion.py::test_pad_middle PASSED                                                                                                                                                                               [ 16%]
+# vampire/tests/test_xcr_vector_conversion.py::test_gene_conversion PASSED                                                                                                                                                                          [ 33%]
+# vampire/tests/test_xcr_vector_conversion.py::test_aa_conversion PASSED                                                                                                                                                                            [ 50%]
+# vampire/tests/test_xcr_vector_conversion.py::test_cdr3_length_of_onehots PASSED                                                                                                                                                                   [ 66%]
+# vampire/tests/test_xcr_vector_conversion.py::test_contiguous_match_counts PASSED                                                                                                                                                                  [ 83%]
+# vampire/tests/test_xcr_vector_conversion.py::test_contiguous_match_counts_df PASSED                                                                                                                                                               [100%]  
+# When we try CHAIN = "delta"
+
+# vampire/tests/test_xcr_vector_conversion.py::test_gene_conversion FAILED                                                                                                                                                                          [ 33%]
+# vampire/tests/test_xcr_vector_conversion.py::test_cdr3_length_of_onehots FAILED                                                                                                                                                                   [ 66%]
+
 
 
 def pad_middle(seq, desired_length):
