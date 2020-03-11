@@ -73,6 +73,10 @@ Please get in touch if anything isn't clear.
 * Our preprocessing scripts exclude TCRBJ2-5, which Adaptive annotates badly, and TCRBJ2-7, which appears to be problematic for OLGA.
 * We use Adaptive gene names and sequences, but will extend to more flexible TCR gene sets in the future.
 
+## Multichain Support (EXPERIMENTAL FEATURE)
+
+* EXPERIMENTAL (March 11, 2020) - to run tcr_vae  with delta or gamma chain data, see `vampire/multichain_support/multichain_spec.json'. Specify chain as "beta", "delta", or "gamma" in the json file. On this experimental branch, the behavior of module xcr_vector_conversion.py will change based on
+this file. This is a tempororary solution, the chain should be ultimately be incorporated into the model_params.json.
 
 ## Contributors
 
