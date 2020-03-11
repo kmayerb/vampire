@@ -9,7 +9,7 @@ setup(
     author='Matsen group',
     author_email='ematsen@gmail.com',
     packages=['vampire', 'vampire.models'],
-    package_data={'vampire': ['data/*']},
+    package_data={'vampire': ['data/*','multichain_support/*']},
     scripts=glob.glob('vampire/scripts/*.sh'),
     entry_points={
         'console_scripts': [
