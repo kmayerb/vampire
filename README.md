@@ -78,6 +78,55 @@ Please get in touch if anything isn't clear.
 * EXPERIMENTAL (March 11, 2020) - to run tcr_vae  with delta or gamma chain data, see `vampire/multichain_support/multichain_spec.json'. Specify chain as "beta", "delta", or "gamma" in the json file. On this experimental branch, the behavior of module xcr_vector_conversion.py will change based on
 this file. This is a tempororary solution, the chain should be ultimately be incorporated into the model_params.json.
 
+For delta chain analysis:
+
+```bash
+docker pull matsengrp/vampire:latest
+docker run -it matsengrp/vampire:latest
+apt-get install nano
+conda activate vampire
+git clone https://github.com/kmayerb/vampire.git
+cd vampire
+pip install .
+```
+
+For now, setting here is where you change the 
+program's chain setting.
+
+```bash
+more /opt/conda/envs/vampire/lib/python3.6/site-packages/vampire/multichain_support/multichain_spec.json
+```
+
+Note that chain is set to "delta" so demo fails
+```json
+{
+    "chain":"delta"
+}
+```
+
+```python
+KeyError: 'TCRBV30-01'
+```
+
+However, you can modify the source code:
+
+```bash
+nano /opt/conda/envs/vampire/lib/python3.6/site-packages/vampire/multichain_support/multichain_spec.json
+```
+
+Edit, Cltr-0, Cltr-X:
+```json
+{
+    "chain":"beta"
+}
+```
+Now run the demo.sh and the default behavior is restored. Wait! One more thing: running vampire with delta chain requires modification of `model_params.json':
+
+```json
+  "n_v_genes": 3,
+  "n_j_genes": 4,
+```
+
 ## Contributors
 
 * Original version (immortalized in the [`original` branch](https://github.com/matsengrp/vampire/tree/original)) by Kristian Davidsen.
