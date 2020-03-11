@@ -27,8 +27,27 @@ AA_DICT = {c: i for i, c in enumerate(AA_LIST)}
 AA_DICT_REV = {i: c for i, c in enumerate(AA_LIST)}
 AA_SET = set(AA_LIST)
 AA_NONGAP = [float(c != '-') for c in AA_LIST]
-CHAIN = "beta"
 
+### CHAIN
+
+import os
+import json
+  
+def of_json_file(fname):
+    with open(fname, 'r') as fp:
+        return json.load(fp)
+
+# THIS BLOCK WAS ADDED TO PROVIDE CONTROL OF CHAIN USAGE, 
+# RIGHT NOW THIS IS CONTROLED WITH A SEPARATE FILE.
+# IT IS MY INTENT THAT CHAIN COULD BE SPECIFIED IN THE model_spec.json file
+path_to_vampire = os.path.dirname(os.path.realpath(__file__))
+fname_spec = os.path.join(  path_to_vampire, 
+                            'multichain_support',
+                            'multichain_spec.json')
+if os.path.isfile(fname_spec):
+    CHAIN = of_json_file(fname = fname_spec)['chain']
+else:
+    CHAIN = "beta"
 
 def seq_to_onehot(seq):
     v = np.zeros((len(seq), len(AA_SET)))
