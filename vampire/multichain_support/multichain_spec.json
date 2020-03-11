@@ -1,3 +1,4 @@
 {
-    "chain":"delta"
+    "comment": "Currenlty supports 'beta' , 'gamma' , or 'delta.",
+    "chain":"beta" 
 }

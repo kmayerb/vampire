@@ -1,7 +1,7 @@
 # vampire
 
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/matsengrp/vampire.svg)](https://cloud.docker.com/u/matsengrp/repository/docker/matsengrp/vampire/general) &nbsp;
-[![Travis CI status](https://travis-ci.org/matsengrp/vampire.svg?branch=master)](https://travis-ci.org/matsengrp/vampire)
+[![Travis Build Status](https://travis-ci.com/kmayerb/vampire.svg?branch=master)](https://travis-ci.com/kmayerb/vampire)
 
 This is a package to fit and test variational autoencoder (VAE) models for T cell receptor sequences.
 
@@ -123,8 +123,15 @@ Edit, Cltr-0, Cltr-X:
 Now run the demo.sh and the default behavior is restored. Wait! One more thing: running vampire with delta chain requires modification of `model_params.json':
 
 ```json
-  "n_v_genes": 3,
-  "n_j_genes": 4,
+"n_v_genes": 3,
+"n_j_genes": 4,
+```
+
+For gamma chain modify `model_params.json`:
+
+```json
+"n_v_genes": 19,
+"n_j_genes": 6,
 ```
 
 ## Contributors
@@ -141,4 +148,3 @@ You can easily run yapf on all the files with a call to `yapf -ir .` in the root
 
 Code also checked using [flake8](http://flake8.pycqa.org/en/latest/).
 `# noqa` comments cause lines to be ignored by flake8.
-
