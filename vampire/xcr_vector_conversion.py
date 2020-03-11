@@ -16,7 +16,8 @@ import pandas as pd
 from functools import partial
 
 import vampire.germline_cdr3_aa_tensor as cdr3_tensor
-
+import os
+import json
 # ### Amino Acids ###
 
 # CDR3Length layer depends on this set and ordering of states.
@@ -28,11 +29,8 @@ AA_DICT_REV = {i: c for i, c in enumerate(AA_LIST)}
 AA_SET = set(AA_LIST)
 AA_NONGAP = [float(c != '-') for c in AA_LIST]
 
-### CHAIN
-
-import os
-import json
-  
+### CHAIN SPECIFICATION #
+ 
 def of_json_file(fname):
     with open(fname, 'r') as fp:
         return json.load(fp)
@@ -71,7 +69,7 @@ TCRB_V_GENE_LIST = [
     'TCRBV12-02', 'TCRBV12-05', 'TCRBV13-01', 'TCRBV14-01', 'TCRBV15-01', 'TCRBV16-01', 'TCRBV18-01', 'TCRBV19-01',
     'TCRBV20-01', 'TCRBV21-01', 'TCRBV22-01', 'TCRBV23-01', 'TCRBV23-or09_02', 'TCRBV25-01', 'TCRBV27-01', 'TCRBV28-01',
     'TCRBV29-01', 'TCRBV30-01', 'TCRBVA-or09_02']
-TCRB_V_GENE_LIST = ['TCRDV01-01','TCRDV02-01','TCRDV03-01'] # THIS IS A HACK TEST
+# TCRB_V_GENE_LIST = ['TCRDV01-01','TCRDV02-01','TCRDV03-01'] # THIS IS A HACK TEST
 TCRB_V_GENE_DICT = {c: i for i, c in enumerate(TCRB_V_GENE_LIST)}
 TCRB_V_GENE_DICT_REV = {i: c for i, c in enumerate(TCRB_V_GENE_LIST)}
 TCRB_V_GENE_SET = set(TCRB_V_GENE_LIST)
@@ -125,7 +123,7 @@ TCRG_V_GENE_SET = set(TCRG_V_GENE_LIST)
 TCRB_J_GENE_LIST = [
     'TCRBJ01-01', 'TCRBJ01-02', 'TCRBJ01-03', 'TCRBJ01-04', 'TCRBJ01-05', 'TCRBJ01-06', 'TCRBJ02-01', 'TCRBJ02-02',
     'TCRBJ02-03', 'TCRBJ02-04', 'TCRBJ02-05', 'TCRBJ02-06', 'TCRBJ02-07']
-TCRB_J_GENE_LIST = ['TCRDJ01-01', 'TCRDJ02-01','TCRDJ03-01','TCRDJ04-01'] # This is a temporary hack test
+# TCRB_J_GENE_LIST = ['TCRDJ01-01', 'TCRDJ02-01','TCRDJ03-01','TCRDJ04-01'] # This is a temporary hack test
 TCRB_J_GENE_DICT = {c: i for i, c in enumerate(TCRB_J_GENE_LIST)}
 TCRB_J_GENE_DICT_REV = {i: c for i, c in enumerate(TCRB_J_GENE_LIST)}
 TCRB_J_GENE_SET = set(TCRB_J_GENE_LIST)
