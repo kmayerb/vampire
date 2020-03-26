@@ -1,0 +1,16 @@
+FROM continuumio/anaconda3:2019.07
+
+RUN /opt/conda/bin/conda update -y conda
+RUN mkdir /vampire
+COPY Dockerfile /vampire/
+COPY install/ /vampire/install/
+WORKDIR /vampire
+
+# Install conda dependencies.
+RUN /opt/conda/bin/conda env create -f install/environment.yml
+RUN /opt/conda/bin/conda activate vampire
+RUN git clone https://github.com/kmayerb/vampire.git
+RUN cd vampire
+RUN pip install .
+RUN export LC_ALL=C.UTF-8
+RUN export LANG=C.UTF-8
